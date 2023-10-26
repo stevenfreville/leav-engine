@@ -79,3 +79,4 @@ if [ "$HOST" = "" -o "$PORT" = "" ]; then
 fi
 
 wait_for "$@"
+
