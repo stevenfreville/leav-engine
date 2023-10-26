@@ -52,6 +52,6 @@ echo '### BUILD VITE APPS ###'
 
 #git push origin
 
-#sleep 600
+sleep 60
 
 echo "----- PREBUILD VITE APPS FINISHED -----"

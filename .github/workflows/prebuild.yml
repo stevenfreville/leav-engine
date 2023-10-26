@@ -1,15 +1,26 @@
-name: Build and Deploy
+name: Prebuild and copy dist folders
 
 on:
-    push:
-        branches:
-            - master
+    issue_comment:
+        types:
+            - created
 
 jobs:
     build:
         runs-on: ubuntu-latest
-
         steps:
+            - name: Check for Specific Comment
+              id: comment_check
+              run: |
+                  LATEST_COMMENT=$(jq -r ".comment.body" $GITHUB_EVENT_PATH)
+                  if [[ "$LATEST_COMMENT" == *"/build"* ]]; then
+                    echo "::set-output name=run_workflow::true"
+                  else
+                    echo "::set-output name=run_workflow::false"
+                  fi
+              env:
+                  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
             - name: Checkout repository
               uses: actions/checkout@v2
 
@@ -20,18 +31,17 @@ jobs:
               run:
                 docker cp -r prebuild:/app/apps/core/dist /apps/core/dist
 
-            - name: Copy "applications" from Docker container
+            - name: Copy "core/applications" from Docker container
               run:
-                docker cp -r docker-prebuild-1:/app/apps/core/applications /apps/core/applications
+                docker cp -r prebuild:/app/apps/core/applications /apps/core/applications
 
             - name: Push "dist" directories to GitHub repository
               uses: ad-m/github-push-action@v0.6.0
               with:
                   github_token: ${{ secrets.TOKEN }}
-                  branch: master
                   files: |
                       /apps/core/dist/*
                       /apps/core/applications/*
-                  target_branch: master
+                  target_branch: ${{ github.ref_name }}
                   force: true
                   commit_message: Update core/dist and core/applications
