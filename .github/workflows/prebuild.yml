@@ -1,9 +1,9 @@
 name: Prebuild and copy dist folders
 
 on:
-    issue_comment:
-        types:
-            - created
+    push:
+        branches:
+            - test
 
 jobs:
     build:
@@ -16,7 +16,7 @@ jobs:
                   if [[ "$LATEST_COMMENT" == *"/build"* ]]; then
                     echo "::set-output name=run_workflow::true"
                   else
-                    echo "::set-output name=run_workflow::false"
+                    echo "::set-output name=run_workflow::true"
                   fi
               env:
                   GITHUB_TOKEN: ${{ secrets.TOKEN }}
