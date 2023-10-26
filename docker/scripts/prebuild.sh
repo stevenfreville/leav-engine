@@ -14,7 +14,7 @@ LOGIN_DIR="$BASEDIR/apps/login"
 CORE_LOGIN_DIST="$BASEDIR/apps/core/applications/login"
 
 echo '### BUILD CORE ###'
-cd $CORE_DIR && yarn install && yarn tsc --project tsconfig.build.json
+#cd $CORE_DIR && yarn install && yarn tsc --project tsconfig.build.json
 
 echo '### BUILD REQUIRED WORKSPACE FOR VITE APPS ###'
 #cd $LIB_UTILS_DIR  && yarn workspace @leav/utils build
