@@ -44,5 +44,6 @@ jobs:
                       /apps/core/dist/*
                       /apps/core/applications/*
                   branch: ${{ github.ref }}
+                  target_branch: ${{ github.ref }}
                   force: true
                   commit_message: Update core/dist and core/applications
