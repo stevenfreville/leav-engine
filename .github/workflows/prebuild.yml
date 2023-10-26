@@ -29,11 +29,11 @@ jobs:
 
             - name: Copy "core/dist" from Docker container
               run:
-                docker cp -r prebuild:/app/apps/core/dist /apps/core/dist
+                docker cp prebuild:/app/apps/core/dist /apps/core/dist
 
             - name: Copy "core/applications" from Docker container
               run:
-                docker cp -r prebuild:/app/apps/core/applications /apps/core/applications
+                docker cp prebuild:/app/apps/core/applications /apps/core/applications
 
             - name: Push "dist" directories to GitHub repository
               uses: ad-m/github-push-action@v0.6.0
