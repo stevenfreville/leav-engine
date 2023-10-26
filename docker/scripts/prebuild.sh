@@ -14,12 +14,12 @@ LOGIN_DIR="$BASEDIR/apps/login"
 CORE_LOGIN_DIST="$BASEDIR/apps/core/applications/login"
 
 echo '### BUILD CORE ###'
-cd $CORE_DIR && yarn install && yarn tsc --project tsconfig.build.json
+npm install typescript@4.8.3 -g
+cd $CORE_DIR && yarn install && node ./scripts/build.js
 
 echo '### BUILD REQUIRED WORKSPACE FOR VITE APPS ###'
 cd $LIB_UTILS_DIR  && yarn workspace @leav/utils build
 cd $LIB_UI_DIR && yarn workspace @leav/ui build
-
 echo '### BUILD VITE APPS ###'
 
 # Install & build
@@ -52,6 +52,6 @@ cp -r $LOGIN_DIR/dist/* $CORE_LOGIN_DIST
 
 #git push origin
 
-sleep 60
+#sleep 6000
 
 echo "----- PREBUILD VITE APPS FINISHED -----"
