@@ -30,9 +30,6 @@ jobs:
             - name: Copy "core/dist" from Docker container
               run: docker cp prebuild:/app/apps/core/dist ./apps/core
 
-            - name: Copy "core/dist" from Docker container
-              run: docker cp prebuild:/app/apps/core/dist .
-
             - name: Copy "core/applications" from Docker container
               run: docker cp prebuild:/app/apps/core/applications ./apps/core
 
