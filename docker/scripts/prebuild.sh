@@ -56,4 +56,3 @@ sleep 60
 
 echo "----- PREBUILD VITE APPS FINISHED -----"
 
-
