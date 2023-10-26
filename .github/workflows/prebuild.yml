@@ -22,19 +22,19 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
             - name: Checkout repository
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
             - name: Build Docker Compose
-              run: docker-compose -f ./docker/docker-compose.prebuild.yml up -d
+              run: docker-compose -f ./docker/docker-compose.prebuild.yml up --build
 
             - name: Copy "core/dist" from Docker container
-              run: docker cp prebuild:/app/apps/core/dist/* ./apps/core/dist
+              run: docker cp prebuild:/app/apps/core/dist ./apps/core
 
             - name: Copy "core/dist" from Docker container
               run: docker cp prebuild:/app/apps/core/dist .
 
             - name: Copy "core/applications" from Docker container
-              run: docker cp prebuild:/app/apps/core/applications/* ./apps/core/applications
+              run: docker cp prebuild:/app/apps/core/applications ./apps/core
 
             - name: Commit and push 'dist' folder
               run: |
