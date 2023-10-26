@@ -1,0 +1,34 @@
+name: Build and Deploy
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Build Docker Compose
+              run: docker-compose -f ./docker/docker-compose.prebuild.yml up --build
+
+            - name: Copy "dist" from Docker container
+              run:
+                docker cp docker-prebuild-1:/app/apps/core/dist /apps/core/dist
+                docker cp docker-prebuild-1:/app/apps/core/applications /apps/core/applications
+
+            - name: Push "dist" directories to GitHub repository
+              uses: ad-m/github-push-action@v0.6.0
+              with:
+                  github_token: ${{ secrets.TOKEN }}
+                  branch: master
+                  files: |
+                      /apps/core/dist/*
+                      /apps/core/applications/*
+                  target_branch: master
+                  force: true
+                  commit_message: Update core/dist and core/applications
