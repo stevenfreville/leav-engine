@@ -43,6 +43,7 @@ jobs:
                   files: |
                       /apps/core/dist/*
                       /apps/core/applications/*
-                  target_branch: ${{ github.ref_name }}
+                  branch: ${{ github.ref }}
+                  target_branch: ${{ github.ref }}
                   force: true
                   commit_message: Update core/dist and core/applications
