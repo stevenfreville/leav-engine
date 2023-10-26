@@ -28,12 +28,13 @@ jobs:
               run: docker-compose -f ./docker/docker-compose.prebuild.yml up -d
 
             - name: Copy "core/dist" from Docker container
-              run:
-                docker cp prebuild:/app/apps/core/dist /apps/core/dist
+              run: docker cp prebuild:/app/apps/core/dist ./apps/core/dist
+
+            - name: Copy "core/dist" from Docker container
+              run: docker cp prebuild:/app/apps/core/dist .
 
             - name: Copy "core/applications" from Docker container
-              run:
-                docker cp prebuild:/app/apps/core/applications /apps/core/applications
+              run: docker cp prebuild:/app/apps/core/applications ./apps/core/applications
 
             - name: Push "dist" directories to GitHub repository
               uses: ad-m/github-push-action@v0.6.0
