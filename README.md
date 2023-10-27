@@ -295,3 +295,4 @@ A few environment variables are available in the script:
 
 # License
 LEAV-Engine is released under the [LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt) license.
+
