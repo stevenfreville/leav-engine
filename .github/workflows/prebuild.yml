@@ -1,9 +1,14 @@
 name: Prebuild and copy dist folders
 
+# generate an event on create pull create, on branch name start by XSTREAM- or when a new comment is added
 on:
-    push:
+    pull_request:
+        types: [opened, synchronize]
         branches:
+            - 'XSTREAM-*'
             - test
+    issue_comment:
+        types: [created]
 
 jobs:
     build:
@@ -39,4 +44,4 @@ jobs:
                     git config --global user.name "GitHub Actions"
                     git add ./apps/core/applications ./apps/core/dist -f
                     git commit -m "Push 'dist' and 'applications' folder to repository"
-                    git push origin ${{ github.ref }}
+                    git push origin ${{ github.event.pull_request.base.ref }}
