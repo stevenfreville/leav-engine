@@ -2,8 +2,6 @@ echo "----- PREBUILD VITE APPS STARTED -----"
 
 BASEDIR='/app'
 CORE_DIR="$BASEDIR/apps/core"
-LIB_UTILS_DIR="$BASEDIR/libs/utils"
-LIB_UI_DIR="$BASEDIR/libs/ui"
 PORTAL_DIR="$BASEDIR/apps/portal"
 CORE_PORTAL_DIST="$BASEDIR/apps/core/applications/portal"
 ADMIN_DIR="$BASEDIR/apps/admin"
@@ -13,22 +11,22 @@ CORE_DATA_STUDIO_DIST="$BASEDIR/apps/core/applications/data-studio"
 LOGIN_DIR="$BASEDIR/apps/login"
 CORE_LOGIN_DIST="$BASEDIR/apps/core/applications/login"
 
-echo '### BUILD CORE ###'
+echo '### INSTALL DEPENDENCIES & WORKSPACES ###'
 npm install typescript@4.8.3 -g
-cd $CORE_DIR && yarn install && node ./scripts/build.js
+yarn install
+yarn workspaces focus --all
 
-echo '### BUILD REQUIRED WORKSPACE FOR VITE APPS ###'
-cd $LIB_UTILS_DIR  && yarn workspace @leav/utils build
-cd $LIB_UI_DIR && yarn workspace @leav/ui build
+echo '### BUILD APPS/CORE ###'
+cd $CORE_DIR &&  node ./scripts/build.js
+
 echo '### BUILD VITE APPS ###'
-
 # Install & build
-cd $PORTAL_DIR && yarn install && yarn build
+cd $PORTAL_DIR && yarn build
 rm -rf $CORE_PORTAL_DIST && mkdir -p $CORE_PORTAL_DIST
 cp -r $PORTAL_DIR/dist/* $CORE_PORTAL_DIST
 
 # Repeat for admin app
-cd $ADMIN_DIR && yarn install && yarn build
+cd $ADMIN_DIR && yarn build
 rm -rf $CORE_ADMIN_DIST && mkdir -p $CORE_ADMIN_DIST
 cp -r $ADMIN_DIR/dist/* $CORE_ADMIN_DIST
 
@@ -52,6 +50,6 @@ cp -r $LOGIN_DIR/dist/* $CORE_LOGIN_DIST
 
 #git push origin
 
-#sleep 6000
+sleep 6000
 
 echo "----- PREBUILD VITE APPS FINISHED -----"
