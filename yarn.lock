@@ -14009,7 +14009,7 @@ __metadata:
     "@leav/app-root-path": "workspace:libs/app-root-path"
     "@leav/config-manager": "workspace:libs/config-manager"
     "@leav/message-broker": "workspace:libs/message-broker"
-    "@leav/utils": "workspace:*"
+    "@leav/utils": "workspace:libs/utils"
     "@types/amqplib": 0.8.2
     "@types/cacache": 15.0.1
     "@types/compression": 1.7.2
