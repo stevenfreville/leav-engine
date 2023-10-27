@@ -1,30 +1,14 @@
 name: Prebuild and copy dist folders
 
-# generate an event on create pull create, on branch name start by XSTREAM- or when a new comment is added
 on:
     pull_request:
         types: [opened, synchronize]
         branches:
             - 'XSTREAM-*'
-            - test
-    issue_comment:
-        types: [created]
-
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - name: Check for Specific Comment
-              id: comment_check
-              run: |
-                  LATEST_COMMENT=$(jq -r ".comment.body" $GITHUB_EVENT_PATH)
-                  if [[ "$LATEST_COMMENT" == *"/build"* ]]; then
-                    echo "::set-output name=run_workflow::true"
-                  else
-                    echo "::set-output name=run_workflow::true"
-                  fi
-              env:
-                  GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
             - name: Checkout repository
               uses: actions/checkout@v2
@@ -44,4 +28,4 @@ jobs:
                     git config --global user.name "GitHub Actions"
                     git add ./apps/core/applications ./apps/core/dist -f
                     git commit -m "Push 'dist' and 'applications' folder to repository"
-                    git push origin ${{ github.event.pull_request.base.ref }}
+                    git push origin ${{ github.ref }}
