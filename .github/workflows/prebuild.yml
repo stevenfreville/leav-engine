@@ -1,10 +1,9 @@
 name: Prebuild and copy dist folders
 
 on:
-    pull_request:
-        types: [opened, synchronize]
+    push:
         branches:
-            - 'XSTREAM-*'
+            - 'XSTREAM-**'
 jobs:
     build:
         runs-on: ubuntu-latest
