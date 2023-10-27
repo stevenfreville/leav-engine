@@ -50,6 +50,6 @@ cp -r $LOGIN_DIR/dist/* $CORE_LOGIN_DIST
 
 #git push origin
 
-sleep 6000
+#sleep 6000
 
 echo "----- PREBUILD VITE APPS FINISHED -----"
