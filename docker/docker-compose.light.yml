@@ -8,10 +8,6 @@ x-redis-image: &redis_image "redis"
 x-arango-image: &arango_image "arangodb:3.10"
 
 x-dir-core: &dir-core /app/apps/core
-x-dir-admin: &dir-admin /app/apps/admin
-x-dir-data_studio: &dir-data_studio /app/apps/data-studio
-x-dir-login: &dir-login /app/apps/login
-x-dir-portal: &dir-portal /app/apps/portal
 x-dir-automate_scan: &dir-automate_scan /app/apps/automate-scan
 x-dir-preview_generator: &dir-preview_generator /app/apps/preview-generator
 x-dir-sync_scan: &dir-sync_scan /app/apps/sync-scan
@@ -78,17 +74,6 @@ x-env-amqp: &env-amqp
     AMQP_PWD: guest
     AMQP_PORT: 5672
 
-x-env-react: &env-react
-    REACT_APP_CORE_URL: http://core.leav.localhost
-    REACT_APP_API_URL: http://core.leav.localhost/graphql
-    REACT_APP_WS_URL: ws://core.leav.localhost/graphql
-    REACT_APP_DEFAULT_LANG: fr
-    REACT_APP_AVAILABLE_LANG: fr,en
-    REACT_APP_LOGIN_ENDPOINT: /app/login/
-    SKIP_PREFLIGHT_CHECK: "true"
-    TSC_WATCHFILE: UseFsEventsWithFallbackDynamicPolling # To reduce CPU usage of TSC's file watching
-    ESLINT_NO_DEV_ERRORS: "true" # To keep compiling on eslint errors
-
 x-env-automate-scan: &env-automate-scan
     ALLOW_FILES_LIST: *allow-list
     IGNORE_FILES_LIST: *ignore-list
@@ -106,18 +91,6 @@ x-env-sync-scan: &env-sync-scan
     GRAPHQL_URI: http://core:4001/graphql
     GRAPHQL_API_KEY: ${GRAPHQL_API_KEY}
     APP_ROOT_PATH: *dir-sync_scan
-
-x-env-admin: &env-admin
-    APP_ROOT_PATH: *dir-admin
-
-x-env-data-studio: &env-data-studio
-    APP_ROOT_PATH: *dir-data_studio
-
-x-env-login: &env-login
-    APP_ROOT_PATH: *dir-login
-
-x-env-portal: &env-portal
-    APP_ROOT_PATH: *dir-portal
 
 x-env-preview-generator: &env-preview-generator
     NODE_ENV: development
@@ -174,7 +147,7 @@ services:
         command: [
             sh,
             -c,
-            "/scripts/wait-for-it.sh message-broker:5672 -t 1000 -- /scripts/wait-for-it.sh arangodb:8529 -t 1000 -- yarn install && mkdir -p ./dist/plugins && yarn start --server",
+            "/scripts/wait-for-it.sh message-broker:5672 -t 1000 -- /scripts/wait-for-it.sh arangodb:8529 -t 1000 -- /scripts/start-light-core.sh",
         ]
 
     indexation-manager:
@@ -423,3 +396,4 @@ volumes:
         driver: local
     node_modules_message-broker:
         driver: local
+

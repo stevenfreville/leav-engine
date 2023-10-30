@@ -11,19 +11,18 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
-            - name: Build Docker Compose
-              run: docker-compose -f ./docker/docker-compose.prebuild.yml up --build
+            - name: Build Docker image
+              run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
 
-            - name: Copy "core/dist" from Docker container
-              run: docker cp prebuild:/app/apps/core/dist ./apps/core
+            - name: Run Docker container
+              run: docker run --name prebuild prebuild
 
-            - name: Copy "core/applications" from Docker container
-              run: docker cp prebuild:/app/apps/core/applications ./apps/core
-
-            - name: Commit and push 'dist' folder
-              run: |
-                  git config --global user.email "actions@github.com"
-                  git config --global user.name "GitHub Actions"
-                  git add ./apps/core/applications ./apps/core/dist -f
-                  git commit -m "Push 'dist' and 'applications' folder to repository"
-                  git push origin ${{ github.ref }}
+            - name: Create an artifact for dist folders
+              uses: actions/upload-artifact@v2
+              with:
+                name: dist-artifact-${{ steps.get_commit_sha.outputs.commit_sha }}
+                path: |
+                    apps/core/dist
+                    apps/core/applications
+                retention-days: 30
+                  

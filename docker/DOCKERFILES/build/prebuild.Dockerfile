@@ -5,17 +5,16 @@ RUN echo "------------------------ START PREBUILD ---------------------------"
 # Dependencies needed to retrieve metadata
 RUN apk --update add alpine-sdk perl pkgconfig poppler poppler-dev poppler-utils
 
-# Launch app install script
-# CMD ["sh", "/app/scripts/prebuild.sh", "--prebuild"]
-
 WORKDIR /app
 
 COPY . /app
 
-RUN chmod +x ./docker/scripts/prebuild.sh
+#RUN yarn workspaces focus --all
 
-CMD ["sh","/app/docker/scripts/prebuild.sh"]
+# Run script/build to build the project in core directory
+#RUN yarn workspace core build
 
-#CMD ["sh", "-c", "tail -f /dev/null"]
+# Install apps
+CMD ["sh", "/app/scripts/apps_install.sh"]
 
 RUN echo "------------------------ END PREBUILD ---------------------------"
