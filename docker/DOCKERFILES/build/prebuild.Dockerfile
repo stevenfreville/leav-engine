@@ -9,11 +9,6 @@ WORKDIR /app
 
 COPY . /app
 
-#RUN yarn workspaces focus --all
-
-# Run script/build to build the project in core directory
-#RUN yarn workspace core build
-
 # Install apps
 CMD ["sh", "/app/scripts/apps_install.sh"]
 

@@ -22,67 +22,59 @@ export ESLINT_NO_DEV_ERRORS=true
 export HOME=$(getent passwd `whoami`  | cut -d: -f6) # To avoid issue when trying to read /root folder as non-root user
 export SKIP_PREFLIGHT_CHECK=true
 
-#echo '### Install dependencies ###'
-#yarn install
-#checkExitCode
+echo '### Install dependencies ###'
+yarn install
+checkExitCode
 
-# Create a folder core/dist
-mkdir -p $BASEDIR/../apps/core/dist
-# create txt file into it
-touch $BASEDIR/../apps/core/dist/leav-core.txt
+# login
+echo '### Build login ###'
+BUILD_LOGIN_DIR="$BASEDIR/../apps/login/dist"
+DEST_LOGIN_DIR="$BASEDIR/../apps/core/applications/login"
+yarn workspace login build
+checkExitCode
+echo '### Move login build to core applications folder ###'
+rm -rf $DEST_LOGIN_DIR
+checkExitCode
+mv $BUILD_LOGIN_DIR $DEST_LOGIN_DIR
+checkExitCode
 
-#echo '### Install dependencies ###'
-#yarn install
-#checkExitCode
-#
-## login
-#echo '### Build login ###'
-#BUILD_LOGIN_DIR="$BASEDIR/../apps/login/dist"
-#DEST_LOGIN_DIR="$BASEDIR/../apps/core/applications/login"
-#yarn workspace login build
-#checkExitCode
-#echo '### Move login build to core applications folder ###'
-#rm -rf $DEST_LOGIN_DIR
-#checkExitCode
-#mv $BUILD_LOGIN_DIR $DEST_LOGIN_DIR
-#checkExitCode
-#
-## portal
-#echo '### Build portal ###'
-#BUILD_PORTAL_DIR="$BASEDIR/../apps/portal/dist"
-#DEST_PORTAL_DIR="$BASEDIR/../apps/core/applications/portal"
-#yarn workspace portal build
-#checkExitCode
-#echo '### Move portal build to core applications folder ###'
-#rm -rf $DEST_PORTAL_DIR
-#checkExitCode
-#mv $BUILD_PORTAL_DIR $DEST_PORTAL_DIR
-#checkExitCode
-#
-## admin
-#echo '### Build admin ###'
-#BUILD_ADMIN_DIR="$BASEDIR/../apps/admin/dist"
-#DEST_ADMIN_DIR="$BASEDIR/../apps/core/applications/admin"
-#yarn workspace admin build
-#checkExitCode
-#echo '### Move admin build to core applications folder ###'
-#rm -rf $DEST_ADMIN_DIR
-#checkExitCode
-#mv $BUILD_ADMIN_DIR $DEST_ADMIN_DIR
-#checkExitCode
-#
-## data-studio
-#echo '### Build data-studio ###'
-#BUILD_DATA_STUDIO_DIR="$BASEDIR/../apps/data-studio/dist"
-#DEST_DATA_STUDIO_DIR="$BASEDIR/../apps/core/applications/data-studio"
-#yarn workspace data-studio build
-#checkExitCode
-#echo '### Move data-studio build to core applications folder ###'
-#rm -rf $DEST_DATA_STUDIO_DIR
-#checkExitCode
-#mv $BUILD_DATA_STUDIO_DIR $DEST_DATA_STUDIO_DIR
-#checkExitCode
+# portal
+echo '### Build portal ###'
+BUILD_PORTAL_DIR="$BASEDIR/../apps/portal/dist"
+DEST_PORTAL_DIR="$BASEDIR/../apps/core/applications/portal"
+yarn workspace portal build
+checkExitCode
+echo '### Move portal build to core applications folder ###'
+rm -rf $DEST_PORTAL_DIR
+checkExitCode
+mv $BUILD_PORTAL_DIR $DEST_PORTAL_DIR
+checkExitCode
 
-#sleep 60000
-#echo '### Applications installed ###'
-#exit 0
+# admin
+echo '### Build admin ###'
+BUILD_ADMIN_DIR="$BASEDIR/../apps/admin/dist"
+DEST_ADMIN_DIR="$BASEDIR/../apps/core/applications/admin"
+yarn workspace admin build
+checkExitCode
+echo '### Move admin build to core applications folder ###'
+rm -rf $DEST_ADMIN_DIR
+checkExitCode
+mv $BUILD_ADMIN_DIR $DEST_ADMIN_DIR
+checkExitCode
+
+# data-studio
+echo '### Build data-studio ###'
+BUILD_DATA_STUDIO_DIR="$BASEDIR/../apps/data-studio/dist"
+DEST_DATA_STUDIO_DIR="$BASEDIR/../apps/core/applications/data-studio"
+yarn workspace data-studio build
+checkExitCode
+echo '### Move data-studio build to core applications folder ###'
+rm -rf $DEST_DATA_STUDIO_DIR
+checkExitCode
+mv $BUILD_DATA_STUDIO_DIR $DEST_DATA_STUDIO_DIR
+checkExitCode
+
+cd /app/apps/core && npx tsc -b ./tsconfig.build.json
+
+echo '### Applications installed ###'
+exit 0
