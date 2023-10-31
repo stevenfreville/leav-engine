@@ -1,12 +1,8 @@
 name: Prebuild core & vite apps
 
 on:
-    pull_request:
-      types:
-        - opened
     issue_comment:
-      types:
-        - created
+      types: [created]
 
 jobs:
   build:
