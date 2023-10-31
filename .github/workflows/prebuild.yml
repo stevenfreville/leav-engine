@@ -1,28 +1,64 @@
 name: Prebuild and copy dist folders
 
 on:
-    push:
-        branches:
-            - 'XSTREAM-**'
+    pull_request:
+      types:
+        - opened
+    issue_comment:
+      types:
+        - created
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
+  build:
+      if: startsWith(github.head_ref, 'XSTREAM-')
+      runs-on: ubuntu-latest
+      steps:
+            - name: Check for Specific Comment
+              id: comment_check
+              run: |
+                LATEST_COMMENT=$(jq -r ".comment.body" $GITHUB_EVENT_PATH)
+                if [[ "$GITHUB_EVENT_NAME" == "pull_request" || "$LATEST_COMMENT" == *"/build"* ]]; then
+                  echo "::set-output name=run_workflow::true"
+                else
+                  echo "::set-output name=run_workflow::false"
+                fi
+              env:
+                GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
             - name: Checkout repository
-              uses: actions/checkout@v2
+              if: steps.comment_check.outputs.run_workflow == 'true'
+              uses: actions/checkout@v3
+
+            - name: Show GitHub context
+              if: steps.comment_check.outputs.run_workflow == 'true'
+              env:
+                GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
 
             - name: Build Docker image
+              if: steps.comment_check.outputs.run_workflow == 'true'
               run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
 
             - name: Run Docker container
+              if: steps.comment_check.outputs.run_workflow == 'true'
               run: docker run --name prebuild prebuild
 
-            - name: Create an artifact for dist folders
-              uses: actions/upload-artifact@v2
+            - name: Copy apps/core/dist
+              if: steps.comment_check.outputs.run_workflow == 'true'
+              run: docker cp prebuild:/app/apps/core/dist ./apps/core/dist
+
+            - name: Copy apps/core/applications
+              if: steps.comment_check.outputs.run_workflow == 'true'
+              run: docker cp prebuild:/app/apps/core/applications ./apps/core/applications
+
+            - name: Create an artifact for core/dist and core/applications
+              if: steps.comment_check.outputs.run_workflow == 'true'
+              uses: actions/upload-artifact@v3
               with:
-                name: dist-artifact-${{ steps.get_commit_sha.outputs.commit_sha }}
+#                name: dist-artifact-${{ github.event.pull_request.head.sha }}
+                name: dist-artifact-${{ github.sha }}
                 path: |
                     apps/core/dist
                     apps/core/applications
                 retention-days: 30
-                  
+
