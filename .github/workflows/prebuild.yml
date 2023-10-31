@@ -1,16 +1,13 @@
 name: Prebuild core & vite apps
 
 on:
-    pull_request:
-      types:
-        - opened
-    issue_comment:
-      types:
-        - created
+  issue_comment:
+    types:
+      - created
 
 jobs:
   build:
-#      if: startsWith(github.head_ref, 'XSTREAM-')
+#      if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
       runs-on: ubuntu-latest
       steps:
           - name: Show GitHub context
@@ -31,13 +28,11 @@ jobs:
               GITHUB_TOKEN: ${{ secrets.TOKEN }}
 #
 #          - name: Checkout repository
-#            if: steps.comment_check.outputs.run_workflow == 'true'
 #            uses: actions/checkout@v3
 
 
 
 #            - name: Build Docker image
-#              if: steps.comment_check.outputs.run_workflow == 'true'
 #              run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
 #
 #            - name: Run Docker container
