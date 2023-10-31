@@ -7,25 +7,25 @@ on:
 
 jobs:
   build:
-#      if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
-      runs-on: ubuntu-latest
-      steps:
-          - name: Show GitHub context
-            env:
-              GITHUB_CONTEXT: ${{ toJson(github) }}
-            run: echo "$GITHUB_CONTEXT"
+    #      if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
-          - name: Check for Specific Comment
-            id: comment_check
-            run: |
-              LATEST_COMMENT=$(jq -r ".comment.body" $GITHUB_EVENT_PATH)
-              if [[ "$GITHUB_EVENT_NAME" == "pull_request" || "$LATEST_COMMENT" == *"/build"* ]]; then
-                echo "::set-output name=run_workflow::true"
-              else
-                echo "::set-output name=run_workflow::false"
-              fi
-            env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Check for Specific Comment
+        id: comment_check
+        run: |
+          LATEST_COMMENT=$(jq -r ".comment.body" $GITHUB_EVENT_PATH)
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" || "$LATEST_COMMENT" == *"/build"* ]]; then
+            echo "::set-output name=run_workflow::true"
+          else
+            echo "::set-output name=run_workflow::false"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 #
 #          - name: Checkout repository
 #            uses: actions/checkout@v3
