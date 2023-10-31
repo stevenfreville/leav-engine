@@ -1,19 +1,22 @@
 name: Prebuild core & vite apps
 
 on:
+  pull_request:
+    types:
+      - opened
   issue_comment:
     types:
       - created
 
 jobs:
   build:
-    #      if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
+    if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
     runs-on: ubuntu-latest
     steps:
-      - name: Show GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      #      - name: Show GitHub context
+      #        env:
+      #          GITHUB_CONTEXT: ${{ toJson(github) }}
+      #        run: echo "$GITHUB_CONTEXT"
 
       - name: Check for Specific Comment
         id: comment_check
@@ -26,35 +29,35 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-#
-#          - name: Checkout repository
-#            uses: actions/checkout@v3
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
+
+      - name: Run Docker container
+        if: steps.comment_check.outputs.run_workflow == 'true'
+        run: docker run --name prebuild prebuild
+
+      - name: Copy apps/core/dist
+        if: steps.comment_check.outputs.run_workflow == 'true'
+        run: docker cp prebuild:/app/apps/core/dist ./apps/core/dist
+
+      - name: Copy apps/core/applications
+        if: steps.comment_check.outputs.run_workflow == 'true'
+        run: docker cp prebuild:/app/apps/core/applications ./apps/core/applications
+
+      - name: Create an artifact for core/dist and core/applications
+        if: steps.comment_check.outputs.run_workflow == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          #                name: dist-artifact-${{ github.event.pull_request.head.sha }}
+          name: dist-artifact-${{ github.sha }}
+          path: |
+            apps/core/dist
+            apps/core/applications
+          retention-days: 30
 
 
-
-#            - name: Build Docker image
-#              run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
-#
-#            - name: Run Docker container
-#              if: steps.comment_check.outputs.run_workflow == 'true'
-#              run: docker run --name prebuild prebuild
-#
-#            - name: Copy apps/core/dist
-#              if: steps.comment_check.outputs.run_workflow == 'true'
-#              run: docker cp prebuild:/app/apps/core/dist ./apps/core/dist
-#
-#            - name: Copy apps/core/applications
-#              if: steps.comment_check.outputs.run_workflow == 'true'
-#              run: docker cp prebuild:/app/apps/core/applications ./apps/core/applications
-#
-#            - name: Create an artifact for core/dist and core/applications
-#              if: steps.comment_check.outputs.run_workflow == 'true'
-#              uses: actions/upload-artifact@v3
-#              with:
-##                name: dist-artifact-${{ github.event.pull_request.head.sha }}
-#                name: dist-artifact-${{ github.sha }}
-#                path: |
-#                    apps/core/dist
-#                    apps/core/applications
-#                retention-days: 30
 
