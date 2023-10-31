@@ -17,7 +17,7 @@ getArtifactList()
             if (artifact.workflow_run.head_sha === commitSha1) return artifact.id;
         })
 
-        if (!artifact) throw new Error('No artifact found for this commit');
+        if (!artifact) throw new Error(`No artifact found for this commit ${commitSha1}`);
 
         const fileName = `${artifact.name}.zip`;
         // before download remove file if exists

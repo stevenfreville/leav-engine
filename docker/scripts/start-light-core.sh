@@ -3,13 +3,10 @@
 
 yarn install
 
-git config --global --add safe.directory /app
+git config --system --add safe.directory /app
 
 # Download artifact and extract it (contains dist folders)
 node ./scripts/preload.js
-
-# Install dependencies
-#yarn workspaces focus core --production
 
 mkdir -p /app/apps/core/dist/plugins
 
