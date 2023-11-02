@@ -32,16 +32,3 @@ jobs:
 
             - name: Copy apps/core/applications
               run: docker cp prebuild:/app/apps/core/applications ./apps/core
-
-            - name: Create an artifact for core/dist and core/applications
-              uses: actions/upload-artifact@v3
-              with:
-                  #                name: dist-artifact-${{ github.event.pull_request.head.sha }}
-                  name: dist-artifact-${{ github.sha }}
-                  path: |
-                      apps/core/dist
-                      apps/core/applications
-                  retention-days: 30
-
-
-
