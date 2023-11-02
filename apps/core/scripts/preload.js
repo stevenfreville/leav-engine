@@ -8,6 +8,7 @@ initEnvVariables();
 
 // Get commit sha1 from git
 const commitSha1 = childProcess.execSync("git rev-parse HEAD").toString().trim();
+console.log('commitSha1', commitSha1);
 let artifact;
 
 getArtifactList()
