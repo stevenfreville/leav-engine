@@ -149,7 +149,7 @@ services:
         command: [
             sh,
             -c,
-            "/scripts/wait-for-it.sh message-broker:5672 -t 1000 -- /scripts/wait-for-it.sh arangodb:8529 -t 1000 -- /scripts/start-light-core.sh",
+            "/scripts/start-light-core.sh",
         ]
 
     indexation-manager:

@@ -1,14 +1,19 @@
-# To avoid permissions issues later on, in particular during applications install
-#chown -R node:node /app
+#!/bin/bash
 
 yarn install
 
+# Used to be able to exec "git rev-parse HEAD" in preload.js
 git config --system --add safe.directory /app
 
-# Download artifact and extract it (contains dist folders)
+echo "Download artifact and extract it (contains dist folders)"
 node ./scripts/preload.js
 
+echo "Unzip dist-artifact-**.zip"
+unzip -o dist-artifact-**.zip -q
+rm -rf dist-artifact-**.zip
+
+echo "mkdir plugin if does not exist"
 mkdir -p /app/apps/core/dist/plugins
 
+echo "start server"
 yarn run start --server
-#sleep 60000

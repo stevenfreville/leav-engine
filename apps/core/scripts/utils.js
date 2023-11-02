@@ -1,6 +1,5 @@
 const https = require("https");
 const fs = require("fs");
-const unzipper = require("unzipper");
 const path = require("path");
 
 // get artifacts list
@@ -59,7 +58,7 @@ const downloadArtifact = (fileName, url) => {
                 // after download completed close filestream
                 file.on("finish", () => {
                     console.log("Download Completed");
-                    file.close(() => resolve(fileName));
+                    resolve(fileName);
                 });
             }
         }).on('error', function (err) { // Handle errors
@@ -69,18 +68,6 @@ const downloadArtifact = (fileName, url) => {
     });
 }
 
-const unzip = (fileName, output) => {
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(fileName)
-            .pipe(unzipper.Extract({path: output}))
-            .on("close", () => {
-                resolve(true);
-                console.log("Files unzipped successfully");
-            }).on("error", (err) => {
-            reject(err);
-        });
-    });
-}
 
 const initEnvVariables = () => {
     const envPath = path.resolve(__dirname, "../.env");
@@ -96,6 +83,5 @@ const initEnvVariables = () => {
 module.exports = {
     getArtifactList,
     downloadArtifact,
-    unzip,
     initEnvVariables
 }

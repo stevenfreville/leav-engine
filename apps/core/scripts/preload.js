@@ -2,13 +2,12 @@
 const childProcess = require('child_process')
 const fs = require('fs');
 
-const {getArtifactList, downloadArtifact, unzip, initEnvVariables} = require("./utils");
+const {getArtifactList, downloadArtifact, initEnvVariables} = require("./utils");
 
 initEnvVariables();
 
 // Get commit sha1 from git
 const commitSha1 = childProcess.execSync("git rev-parse HEAD").toString().trim();
-console.log('commitSha1', commitSha1);
 let artifact;
 
 getArtifactList()
@@ -28,14 +27,13 @@ getArtifactList()
 
         return downloadArtifact(fileName, artifact.archive_download_url)
     })
-    .then((fileName) => {
-        return unzip(fileName, "../.")
-    })
     .then((res) => {
-        console.log('file unzipped', res)
+        console.log('file downloaded', res);
+        process.exit(0);
     })
     .catch((err) => {
-        console.log('error', err)
+        console.log('error', err);
+        process.exit(0);
     });
 
 
