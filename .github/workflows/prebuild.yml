@@ -4,6 +4,7 @@ on:
     pull_request:
         types:
             - opened
+            - synchronize
 #    issue_comment:
 #        types:
 #            - created
@@ -36,8 +37,7 @@ jobs:
             - name: Create an artifact for core/dist and core/applications
               uses: actions/upload-artifact@v3
               with:
-                  #                name: dist-artifact-${{ github.event.pull_request.head.sha }}
-                  name: dist-artifact-${{ github.sha }}
+                  name: dist-artifact-${{ github.event.pull_request.head.sha }}
                   path: |
                       apps/core/dist
                       apps/core/applications
