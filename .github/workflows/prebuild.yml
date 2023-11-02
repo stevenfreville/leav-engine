@@ -37,7 +37,7 @@ jobs:
 
             - name: Echo head sha
               env:
-                  HEAD_SHA: ${{ fromJSON(steps.get-head-sha.outputs.result).head.sha }}
+                  HEAD_SHA: ${{ fromJSON(steps.get-head-sha.outputs.result) }}
               run: echo "$HEAD_SHA"
 
             - name: Checkout repository
