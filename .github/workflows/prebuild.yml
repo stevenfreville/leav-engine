@@ -13,10 +13,10 @@ jobs:
         if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
         runs-on: ubuntu-latest
         steps:
-            #      - name: Show GitHub context
-            #        env:
-            #          GITHUB_CONTEXT: ${{ toJson(github) }}
-            #        run: echo "$GITHUB_CONTEXT"
+            - name: Show GitHub context
+              env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
 
             - name: Checkout repository
               uses: actions/checkout@v3
