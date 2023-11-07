@@ -1,11 +1,10 @@
-const https = require("https");
+const https = require('https');
 const fs = require("fs");
 const path = require("path");
 
 // get artifacts list
 const getArtifactList = () => {
-    const artifactListUrl = "https://api.github.com/repos/stevenfreville/leav-engine/actions/artifacts";
-    console.log('process.env.GITHUB_TOKEN', process.env.GITHUB_TOKEN)
+    const artifactListUrl = "https://api.github.com/repos/leav-solutions/leav-engine/actions/artifacts";
     const options = {
         headers: {
             "Content-Type": "application/json",
@@ -30,7 +29,6 @@ const getArtifactList = () => {
         });
         req.end();
     });
-
 }
 
 const downloadArtifact = (fileName, url) => {
@@ -48,9 +46,7 @@ const downloadArtifact = (fileName, url) => {
         https.get(url, options, (res) => {
             if (res.statusCode === 302) {
                 // if we got a redirect, recurse and call downloadArtifact again
-                downloadArtifact(fileName, res.headers.location)
-                    .then(resolve)
-                    .catch(reject);
+                downloadArtifact(fileName, res.headers.location).then(resolve).catch(reject);
             } else if (res.statusCode !== 200) {
                 reject(new Error(`Failed to get '${url}' (${res.statusCode})`));
             } else {
@@ -67,7 +63,6 @@ const downloadArtifact = (fileName, url) => {
         });
     });
 }
-
 
 const initEnvVariables = () => {
     const envPath = path.resolve(__dirname, "../.env");
