@@ -5,7 +5,7 @@ const path = require("path");
 // get artifacts list
 const getArtifactList = () => {
     const artifactListUrl = "https://api.github.com/repos/stevenfreville/leav-engine/actions/artifacts";
-    console.log('process.env.GITHUB_TOKEN', process.env.GITHUB_TOKEN)
+    // console.log('process.env.GITHUB_TOKEN', process.env.GITHUB_TOKEN)
     const options = {
         headers: {
             "Content-Type": "application/json",
