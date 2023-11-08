@@ -16,7 +16,7 @@ if (!gitArtifactBranch) {
 
 (async () => {
     try {
-        const list = await getArtifactList();
+        const { data: list} = await getArtifactList();
         // Find the artifact with the same commit sha1
         artifact = list.artifacts.find((artifact) => {
             // if artifact.name includes commit Sha1
@@ -32,6 +32,7 @@ if (!gitArtifactBranch) {
             fs.unlinkSync(fileName);
         }
         await downloadArtifact(fileName, artifact.archive_download_url);
+        console.log(`Artifact ${fileName} downloaded successfully`);
     } catch (err) {
         console.log('error', err);
         process.exit(0);
