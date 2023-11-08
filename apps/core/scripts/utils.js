@@ -4,7 +4,7 @@ const path = require("path");
 
 // get artifacts list
 const getArtifactList = () => {
-    const artifactListUrl = "https://api.github.com/repos/stevenfreville/leav-engine/actions/artifacts";
+    const artifactListUrl = "https://api.github.com/repos/leav-solutions/leav-engine/actions/artifacts";
     const options = {
         headers: {
             "Content-Type": "application/json",
