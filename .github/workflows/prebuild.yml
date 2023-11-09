@@ -55,7 +55,7 @@ jobs:
             - name: Store banch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.result is defined
               id: get-branch
               run: |
-                if [ -z "${{ steps.get-head-sha.outputs.result }}" ]; then
+                if [ -z "${{ steps.get-head-sha && steps.get-head-sha.outputs.result }}" ]; then
                     echo "::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}"
                 else
                     echo "::set-output name=branch::${{ github.ref_name }}"
