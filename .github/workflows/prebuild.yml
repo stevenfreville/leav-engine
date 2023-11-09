@@ -52,11 +52,19 @@ jobs:
             - name: Copy apps/core/applications
               run: docker cp prebuild:/app/apps/core/applications ./apps/core
 
+            - name: Store banch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.result is defined
+              id: get-branch
+              run: |
+                if [ -z "${{ steps.get-head-sha.outputs.result }}" ]; then
+                    echo "::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}"
+                else
+                    echo "::set-output name=branch::${{ github.ref_name }}"
+                fi
+
             - name: Create an artifact for core/dist and core/applications
               uses: actions/upload-artifact@v3
               with:
-                  # inputs.BRANCH is used for workflow_dispatch and head.ref is used for pull_request
-                  name: dist-artifact-${{ fromJSON(steps.get-head-sha.outputs.result).head.ref || github.ref_name }}
+                  name: dist-artifact-${{ steps.get-branch.outputs.branch }}
                   path: |
                       apps/core/dist
                       apps/core/applications
