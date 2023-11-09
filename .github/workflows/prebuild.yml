@@ -7,10 +7,11 @@ on:
     issue_comment:
         types:
             - created
+    workflow_dispatch:
 
 jobs:
     build:
-        if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
+        if: github.event_name == 'workflow_dispatch' ||  github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
         runs-on: ubuntu-latest
         steps:
             - name: Show GitHub context
@@ -58,7 +59,8 @@ jobs:
             - name: Create an artifact for core/dist and core/applications
               uses: actions/upload-artifact@v3
               with:
-                  name: dist-artifact-${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}
+                  # inputs.BRANCH is used for workflow_dispatch and head.ref is used for pull_request
+                  name: dist-artifact-${{ github.ref_name || fromJSON(steps.get-head-sha.outputs.result).head.ref }}
                   path: |
                       apps/core/dist
                       apps/core/applications
