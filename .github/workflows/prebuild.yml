@@ -21,7 +21,7 @@ jobs:
 
             - uses: actions/github-script@v6
               if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
-              id: get-head-sha
+              id: get-head
               with:
                   script: |
                       const request = {
@@ -53,7 +53,7 @@ jobs:
 #              run: docker cp prebuild:/app/apps/core/applications ./apps/core
 
             - name: Display outputs variable
-              run: echo "The outcome is ${{ toJson(steps.get-head-sha.outputs) }}"
+              run: echo "The outcome is ${{ toJson(steps.get-head.outputs) }}"
 
             - name: Store branch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.outcome is not skipped
               id: set-branch-from-ref-name
@@ -61,9 +61,10 @@ jobs:
               run: echo ::set-output name=branch::${{ github.ref_name }}
 
             - name: Store branch variable, if outputs.outcome is not skipped
-              id: get-branch-from-head-ref
-              if: steps.get-head-sha.outputs.result.outcome != 'skipped'
-              run: echo ::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs).head.ref }}
+              id: set-branch-from-head-ref
+              # check if outputs.result is defined
+              if: steps.get-head.outputs.result
+              run: echo ::set-output name=branch::${{ fromJSON(steps.get-head.outputs.result).head.ref }}
 
             - name: Display branch variable
               run: echo "The branch is ${{ steps.get-branch.outputs.branch }}"
