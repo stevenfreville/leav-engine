@@ -58,12 +58,11 @@ jobs:
             - name: Store branch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.outcome is not skipped
               id: get-branch
               run: |
-                    if [ "${{ steps.get-head-sha.outputs.result }}" ]; then
-                        echo ::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}
+                    if: github.event_name == 'pull_request' || contains(github.event.comment.body, '/build')
+                      echo ::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}
                     else
-                        echo ::set-output name=branch::${{ github.ref_name }}
+                      echo ::set-output name=branch::${{ github.ref_name }}
                     fi
-
 
             - name: Display branch variable
               run: echo "The branch is ${{ steps.get-branch.outputs.branch }}"
