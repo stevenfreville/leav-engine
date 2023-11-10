@@ -32,7 +32,7 @@ jobs:
                       core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
                       try {
                         const result = await github.rest.pulls.get(request)
-                        return result.data
+                        core.setOutput('head_ref', result.data.head.ref)
                       } catch (err) {
                         core.setFailed(`Request failed with error ${err}`)
                       }
@@ -55,25 +55,18 @@ jobs:
             - name: Display outputs variable
               run: echo "The outcome is ${{ toJson(steps.get-head.outputs.result) }}"
 
-            - name: Store branch variable, if event name == workflow_dispatch or steps.get-head.outputs.result is defined
+            - name: Store branch variable, if event name == workflow_dispatch or steps.get-head.outputs.result.head.ref is defined
               id: get-branch
               run: |
                 if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-                    echo ::set-output name=branch::${{ github.ref_name }}
+                   echo ::set-output name=branch::${{ github.ref_name }}
                 else
-                  echo ${{ toJson(steps.get-head.outputs.result) }}
-                  echo ${{ toJson(steps.get-head.outputs.result) }}.head
-                  echo ${{ toJson(steps.get-head.outputs.result) }}.head.ref
-                  echo ${{ toJson(steps.get-head.outputs.result).head }}
-                  echo ${{ fromJSON(steps.get-head.outputs.result).head }}
-                  echo ${{ fromJSON(steps.get-head.outputs.result) }}.head.ref
-                  echo ${{ steps.get-head.outputs.result }}
-                  echo ${{ steps.get-head.outputs.result.head.ref }}
-                  if [ ${{ toJson(steps.get-head.outputs.result).head != '' }} ]; then
-                    echo ::set-output name=branch::${{ toJson(steps.get-head-sha.outputs.result).head.ref }}
-                  else
-                    echo ::set-output name=branch::master
-                  fi
+                 branch_ref=${{ steps.get-head.outputs.head_ref }}
+                 if [ "$branch_ref" != "null" ]; then
+                   echo ::set-output name=branch::${branch_ref}
+                 else
+                   echo ::set-output name=branch::master
+                 fi
                 fi
 
             - name: Display branch variable
