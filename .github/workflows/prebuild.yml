@@ -61,7 +61,11 @@ jobs:
                 if [ ${{ github.event_name }} == 'workflow_dispatch' ]; then
                     echo ::set-output name=branch::${{ github.ref_name }}
                 else
-                    echo ::set-output name=branch::${{ steps.get-head-sha.outputs.result.head.ref }}
+                  if [ -z "${{ steps.get-head.outputs.result }}" ]; then
+                    echo ::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}
+                  else
+                    echo ::set-output name=branch::master
+                  fi
                 fi
 
             - name: Display branch variable
