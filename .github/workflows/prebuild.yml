@@ -62,8 +62,11 @@ jobs:
                     echo ::set-output name=branch::${{ github.ref_name }}
                 else
                   echo ${{ toJson(steps.get-head.outputs.result) }}
+                  echo ${{ toJson(steps.get-head.outputs.result) }}.head
+                  echo ${{ toJson(steps.get-head.outputs.result) }}.head.ref
                   echo ${{ toJson(steps.get-head.outputs.result).head }}
                   echo ${{ fromJSON(steps.get-head.outputs.result).head }}
+                  echo ${{ fromJSON(steps.get-head.outputs.result) }}.head.ref
                   echo ${{ steps.get-head.outputs.result }}
                   echo ${{ steps.get-head.outputs.result.head.ref }}
                   if [ ${{ toJson(steps.get-head.outputs.result).head != '' }} ]; then
