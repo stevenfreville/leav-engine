@@ -59,7 +59,7 @@ jobs:
               id: get-branch
               # if we have a result in steps.get-head-sha.outputs.result, we use it, otherwise we use github.ref_name
               run: |
-                    if: steps.get-head-sha.outputs.result == 'skipped'
+                    if steps.get-head-sha.outputs.result == 'skipped'
                         echo "::set-output name=branch::${{ github.ref_name }}"
                     else
                         echo "::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}"
