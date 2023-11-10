@@ -55,16 +55,14 @@ jobs:
             - name: Display outputs variable
               run: echo "The outcome is ${{ toJson(steps.get-head.outputs) }}"
 
-            - name: Store branch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.outcome is not skipped
-              id: set-branch-from-ref-name
-              if: github.event_name == 'workflow_dispatch'
-              run: echo ::set-output name=branch::${{ github.ref_name }}
-
-            - name: Store branch variable, if outputs.outcome is not skipped
-              id: set-branch-from-head-ref
-              # check if outputs.result is defined
-              if: steps.get-head.outputs.result
-              run: echo ::set-output name=branch::${{ fromJSON(steps.get-head.outputs.result).head.ref }}
+            - name: Store branch variable, if event name == workflow_dispatch or steps.get-head.outputs.result is defined
+              id: get-branch
+              run: |
+                if [ "${{ github.event_name == 'workflow_dispatch' }}" ]; then
+                    echo ::set-output name=branch::${{ github.ref_name }}
+                else
+                    echo ::set-output name=branch::${{ fromJSON(steps.get-head.outputs.result).head.ref }}
+                fi
 
             - name: Display branch variable
               run: echo "The branch is ${{ steps.get-branch.outputs.branch }}"
