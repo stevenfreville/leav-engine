@@ -40,26 +40,33 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Build Docker image
-              run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
+#            - name: Build Docker image
+#              run: docker build . -t prebuild -f ./docker/DOCKERFILES/build/prebuild.Dockerfile
+#
+#            - name: Run Docker container
+#              run: docker run --name prebuild prebuild
+#
+#            - name: Copy apps/core/dist
+#              run: docker cp prebuild:/app/apps/core/dist ./apps/core
+#
+#            - name: Copy apps/core/applications
+#              run: docker cp prebuild:/app/apps/core/applications ./apps/core
 
-            - name: Run Docker container
-              run: docker run --name prebuild prebuild
-
-            - name: Copy apps/core/dist
-              run: docker cp prebuild:/app/apps/core/dist ./apps/core
-
-            - name: Copy apps/core/applications
-              run: docker cp prebuild:/app/apps/core/applications ./apps/core
+            - name: Display outputs variable
+              run: echo "The outcome is ${{ steps.get-head-sha.outputs.result }}"
 
             - name: Store branch variable, if workflow_dispatch get github.ref_name otherwise get head.ref if outputs.outcome is not skipped
               id: get-branch
               run: |
                     if [ "${{ steps.get-head-sha.outputs.result }}" ]; then
-                        echo ::set-output name=branch::${{ steps.get-head-sha.outputs.result.head.ref }}
+                        echo ::set-output name=branch::${{ fromJSON(steps.get-head-sha.outputs.result).head.ref }}
                     else
                         echo ::set-output name=branch::${{ github.ref_name }}
                     fi
+
+
+            - name: Display branch variable
+              run: echo "The branch is ${{ steps.get-branch.outputs.branch }}"
 
             - name: Create an artifact for core/dist and core/applications
               uses: actions/upload-artifact@v3
