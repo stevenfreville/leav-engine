@@ -9,6 +9,9 @@ WORKDIR /app
 
 COPY . /app
 
+# Install dev modules, needed for build and build project
+RUN yarn workspaces focus core && yarn workspace core build
+
 # Install apps
 CMD ["sh", "/app/scripts/apps_install.sh"]
 
