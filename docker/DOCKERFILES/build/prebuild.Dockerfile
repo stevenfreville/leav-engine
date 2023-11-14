@@ -15,3 +15,4 @@ RUN yarn workspaces focus core && yarn workspace core build
 CMD ["sh", "/app/scripts/apps_install.sh"]
 
 RUN echo "------------------------ END PREBUILD ---------------------------"
+
