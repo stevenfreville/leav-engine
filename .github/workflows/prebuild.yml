@@ -77,3 +77,4 @@ jobs:
                       apps/core/dist
                       apps/core/applications
                   retention-days: 30
+
